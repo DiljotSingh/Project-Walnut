@@ -1,0 +1,10 @@
+---
+applications:
+  - instances: 1
+    timeout: 180
+    name: walnut-app
+    buildpack: sdk-for-nodejs
+    command: node -r esm server.js
+    memory: 512M
+    domain: mybluemix.net
+    host: walnut-app

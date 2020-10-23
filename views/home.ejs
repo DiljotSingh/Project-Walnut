@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Walnut</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/minty/bootstrap.min.css">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+  <a class="navbar-brand" href="#">Walnut</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+    aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+  </div>
+  <div class="text-white">Welcome <%=data.name%></div>
+  <a class="text-white ml-3" href="/logout">Sign out</a>
+</nav>
+
+<body>
+  <div class="container mt-5 animated fadeInUp">
+    <h1>My Dashboard</h1>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="bg-white rounded-lg col-md-12 shadow">
+          <button id="link-button" type="button" class="btn btn-secondary rounded-lg float-right">Link Account</button>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Merchant</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Contribution</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (data.transactions !== null) {%>
+              <% for (let transaction of data.transactions.reverse()) { %>
+              <% if (transaction.amount < 0) { continue; }%>
+              <tr class="table-default">
+                <td><%= transaction.date %></td>
+                <td><%= transaction.name %></td>
+                <td>$<%= transaction.amount %> </td>
+                <td class="text-success">+$<%= transaction.rounded %> </td>
+              </tr>
+              <% } %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="bg-white rounded-lg p-5 shadow">
+          <h2 class="h6 font-weight-bold text-center mb-4">Overall Progress to Next Donation</h2>
+
+          <!-- Progress bar 1 -->
+          <div class="progress mx-auto" data-value='<%= data.difference %>'>
+            <span class="progress-left">
+              <span class="progress-bar border-success"></span>
+            </span>
+            <span class="progress-right">
+              <span class="progress-bar border-success"></span>
+            </span>
+            <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+              <div class="h2 font-weight-bold">$<%= data.difference %></div>
+            </div>
+          </div>
+          <!-- END -->
+
+          <!-- Demo info -->
+          <div class="row text-center mt-4">
+            <div class="col-6 border-right">
+              <div class="h4 font-weight-bold mb-0">$<%= data.balance %></div><span
+                class="small text-gray">Spendings</span>
+            </div>
+            <div class="col-6">
+              <div class="h4 font-weight-bold mb-0">$<%= data.roundedBalance %></div><span
+                class="small text-gray">Rounded Spendings</span>
+            </div>
+          </div>
+
+
+
+
+          <table class="table table-hover">
+            <h2 class="h6 font-weight-bold text-center mb-4" , style="margin-top: 25px">Previous Donations</h2>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Name</th>
+                <th scope="col">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (data.donations !== null) {%>
+              <% for (let donation of data.donations.reverse()) { %>
+              <% if (donation.amount < 0) { continue; }%>
+              <tr class="table-default">
+                <td><%= donation.date %></td>
+                <td><%= donation.name %></td>
+                <td>$<%= donation.amount %> </td>
+              </tr>
+              <% } %>
+              <% } %>
+            </tbody>
+          </table>
+
+
+
+
+
+
+
+          <!-- END -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>$(function () {
+
+      const donationThreshold = 5;
+
+      $(".progress").each(function () {
+
+        var value = $(this).attr('data-value');
+        var left = $(this).find('.progress-left .progress-bar');
+        var right = $(this).find('.progress-right .progress-bar');
+
+        if (value > 0) {
+          if (value <= (donationThreshold / 2)) {
+            right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+          } else {
+            right.css('transform', 'rotate(180deg)')
+            left.css('transform', 'rotate(' + percentageToDegrees(value - (donationThreshold / 2)) + 'deg)')
+          }
+        }
+
+      })
+
+      function percentageToDegrees(percentage) {
+        return percentage / donationThreshold * 360;
+      }
+
+    });
+  </script>
+
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <script type="text/javascript">
+    (async function () {
+      const fetchLinkToken = async () => {
+        const response = await fetch('/create_link_token', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        const responseJSON = await response.json();
+        return responseJSON.link_token;
+      };
+
+      const configs = {
+        // 1. Pass a new link_token to Link.
+        token: await fetchLinkToken(),
+        onSuccess: async function (public_token, metadata) {
+          // 2a. Send the public_token to your app server.
+          // The onSuccess function is called when the user has successfully
+          // authenticated and selected an account to use.
+          await fetch('/get_access_token', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ public_token: public_token }),
+          });
+        },
+        onExit: async function (err, metadata) {
+          // 2b. Gracefully handle the invalid link token error. A link token
+          // can become invalidated if it expires, has already been used
+          // for a link session, or is associated with too many invalid logins.
+          if (err != null && err.error_code === 'INVALID_LINK_TOKEN') {
+            linkHandler.destroy();
+            linkHandler = Plaid.create({
+              ...configs,
+              token: await fetchLinkToken(),
+            });
+          }
+          if (err != null) {
+            // Handle any other types of errors.
+          }
+          // metadata contains information about the institution that the
+          // user selected and the most recent API request IDs.
+          // Storing this information can be helpful for support.
+        },
+      };
+
+      var linkHandler = Plaid.create(configs);
+
+      document.getElementById('link-button').onclick = function () {
+        linkHandler.open();
+      };
+    })();
+  </script>
+</body>
+
+</html>
