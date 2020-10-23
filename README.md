@@ -9,4 +9,6 @@ To run this project:
 Check out our web-app out here: https://walnut-app.mybluemix.net/
 
 ![alt text](https://user-images.githubusercontent.com/45079666/96960600-a6816280-14b7-11eb-89fb-b445228d13ce.png)
+![alt text](https://user-images.githubusercontent.com/45079666/96960655-c4e75e00-14b7-11eb-9696-af227556ccc9.png)
+
 
