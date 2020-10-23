@@ -1,4 +1,4 @@
-Creators: [Diljot Singh](https://github.com/DiljotSingh), [Benjamin Garcia](https://github.com/benjamingarcia10), Anthony Do, Mark Silva, and Steven Bui
+Creators: [Diljot Singh](https://github.com/DiljotSingh), [Benjamin Garcia](https://github.com/benjamingarcia10), [Anthony Do](https://github.com/anthonydo1), [Mark Silva](, and [Steven Bui](https://github.com/Stevenbui21)
 
 To run this project:
 1. Download Node.js 14.6 or above.
