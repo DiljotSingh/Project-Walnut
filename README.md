@@ -8,5 +8,5 @@ To run this project:
 
 Check out our web-app out here: https://walnut-app.mybluemix.net/
 
-![alt text](https://gyazo.com/ad0cc10fc66fabde981e22e851e1f049?token=0b698488bf0ab76749d77d01e4a3fb0f)
+![alt text](https://gyazo.com/ad0cc10fc66fabde981e22e851e1f049)
 
